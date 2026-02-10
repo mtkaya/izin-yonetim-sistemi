@@ -26,9 +26,9 @@ router.get('/ara', async (req: Request, res: Response) => {
       where: {
         aktif: true,
         OR: [
-          { sicilNo: { contains: String(q || ''), mode: 'insensitive' } },
-          { ad: { contains: String(q || ''), mode: 'insensitive' } },
-          { soyad: { contains: String(q || ''), mode: 'insensitive' } },
+          { sicilNo: { contains: String(q || '') } },
+          { ad: { contains: String(q || '') } },
+          { soyad: { contains: String(q || '') } },
         ],
       },
       include: { birim: true },
