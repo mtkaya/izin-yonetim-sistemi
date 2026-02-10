@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Birim {
+  id        Int        @id @default(autoincrement())
+  ad        String     @db.VarChar(100)
+  aktif     Boolean    @default(true)
+  personeller Personel[]
+
+  @@map("birimler")
+}
+
+model Personel {
+  id                    Int          @id @default(autoincrement())
+  sicilNo               String       @unique @map("sicil_no") @db.VarChar(20)
+  ad                    String       @db.VarChar(100)
+  soyad                 String       @db.VarChar(100)
+  telefon               String?      @db.VarChar(20)
+  birimId               Int?         @map("birim_id")
+  birim                 Birim?       @relation(fields: [birimId], references: [id])
+  hakTarih              DateTime?    @map("hak_tarih") @db.Date
+  hizmetSuresi          Int?         @map("hizmet_suresi")
+  puantor               String?      @db.VarChar(100)
+  goreveBaslamaTarihi   DateTime?    @map("goreve_baslama_tarihi") @db.Date
+  aktif                 Boolean      @default(true)
+  createdAt             DateTime     @default(now()) @map("created_at")
+  updatedAt             DateTime     @updatedAt @map("updated_at")
+  izinKayitlari         IzinKaydi[]
+
+  @@map("personeller")
+}
+
+model IzinTuru {
+  id        Int          @id @default(autoincrement())
+  ad        String       @db.VarChar(100)
+  maxGun    Int?         @map("max_gun")
+  ucretli   Boolean      @default(true)
+  aktif     Boolean      @default(true)
+  izinKayitlari IzinKaydi[]
+
+  @@map("izin_turleri")
+}
+
+model IzinKaydi {
+  id               Int       @id @default(autoincrement())
+  personelId       Int       @map("personel_id")
+  personel         Personel  @relation(fields: [personelId], references: [id])
+  izinTuruId       Int       @map("izin_turu_id")
+  izinTuru         IzinTuru  @relation(fields: [izinTuruId], references: [id])
+  baslangicTarihi  DateTime  @map("baslangic_tarihi") @db.Date
+  bitisTarihi      DateTime  @map("bitis_tarihi") @db.Date
+  gunSayisi        Decimal   @map("gun_sayisi") @db.Decimal(5, 1)
+  aciklama         String?   @db.Text
+  kayitTarihi      DateTime  @default(now()) @map("kayit_tarihi")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  @@map("izin_kayitlari")
+}
+
+model ResmiTatil {
+  id        Int      @id @default(autoincrement())
+  ad        String   @db.VarChar(200)
+  tarih     DateTime @db.Date
+  gunSayisi Decimal  @default(1) @map("gun_sayisi") @db.Decimal(3, 1)
+
+  @@map("resmi_tatiller")
+}
