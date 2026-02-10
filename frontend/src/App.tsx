@@ -6,6 +6,7 @@ import PersonelPage from './pages/PersonelPage';
 import IzinIslemleriPage from './pages/IzinIslemleriPage';
 import RaporlarPage from './pages/RaporlarPage';
 import ResmiTatilPage from './pages/ResmiTatilPage';
+import MesaiPage from './pages/MesaiPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route index element={<Navigate to="/personel" replace />} />
             <Route path="personel" element={<PersonelPage />} />
             <Route path="izin" element={<IzinIslemleriPage />} />
+            <Route path="mesai" element={<MesaiPage />} />
             <Route path="raporlar" element={<RaporlarPage />} />
             <Route path="resmi-tatil" element={<ResmiTatilPage />} />
           </Route>

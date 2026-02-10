@@ -5,6 +5,7 @@ import {
   CalendarOutlined,
   BarChartOutlined,
   ScheduleOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
@@ -20,6 +21,11 @@ const menuItems = [
     key: '/izin',
     icon: <CalendarOutlined />,
     label: 'Izin Islemleri',
+  },
+  {
+    key: '/mesai',
+    icon: <ClockCircleOutlined />,
+    label: 'Mesai Islemleri',
   },
   {
     key: '/raporlar',
@@ -55,7 +61,7 @@ export default function AppLayout() {
           borderBottom: '1px solid #f0f0f0',
         }}>
           <h2 style={{ margin: 0, fontSize: collapsed ? 16 : 20, color: '#1677ff' }}>
-            {collapsed ? 'IY' : 'Izin Yonetimi'}
+            {collapsed ? 'PY' : 'Personel Yonetimi'}
           </h2>
         </div>
         <Menu
@@ -75,7 +81,7 @@ export default function AppLayout() {
           alignItems: 'center',
         }}>
           <h3 style={{ margin: 0, color: '#333' }}>
-            Personel Izin Takip Sistemi
+            Personel Yonetim Sistemi
           </h3>
         </Header>
         <Content style={{

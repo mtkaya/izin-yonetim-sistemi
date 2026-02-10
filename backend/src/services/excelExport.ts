@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs';
 import { PrismaClient } from '@prisma/client';
+import { mesaiOzetHesapla, odemeDonemiHesapla } from './mesaiHesaplama';
 
 const prisma = new PrismaClient();
 
@@ -97,6 +98,105 @@ export async function exportIzinRaporu(yil: number): Promise<ExcelJS.Workbook> {
       bitis: iz.bitisTarihi.toISOString().split('T')[0],
       gun: Number(iz.gunSayisi),
       aciklama: iz.aciklama || '',
+    });
+  }
+
+  return workbook;
+}
+
+export async function exportMesaiDetayRaporu(
+  yil: number,
+  ay: number
+): Promise<ExcelJS.Workbook> {
+  const donem = odemeDonemiHesapla(yil, ay);
+
+  const kayitlar = await prisma.mesaiKaydi.findMany({
+    where: {
+      tarih: { gte: donem.baslangic, lte: donem.bitis },
+      saat: { gt: 0 },
+    },
+    include: {
+      personel: { include: { birim: true } },
+      mesaiNedeni: true,
+    },
+    orderBy: [{ personelId: 'asc' }, { tarih: 'asc' }],
+  });
+
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet(`Mesai Detay - ${donem.etiket}`);
+
+  sheet.columns = [
+    { header: 'Sicil No', key: 'sicilNo', width: 12 },
+    { header: 'Ad Soyad', key: 'adSoyad', width: 25 },
+    { header: 'Birim', key: 'birim', width: 25 },
+    { header: 'Tarih', key: 'tarih', width: 14 },
+    { header: 'Saat', key: 'saat', width: 10 },
+    { header: 'Mesai Nedeni', key: 'neden', width: 20 },
+    { header: 'Aciklama', key: 'aciklama', width: 30 },
+  ];
+
+  sheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  sheet.getRow(1).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FF4472C4' },
+  };
+
+  for (const k of kayitlar) {
+    sheet.addRow({
+      sicilNo: k.personel.sicilNo,
+      adSoyad: `${k.personel.ad} ${k.personel.soyad}`,
+      birim: k.personel.birim?.ad || '',
+      tarih: k.tarih.toISOString().split('T')[0],
+      saat: Number(k.saat),
+      neden: k.mesaiNedeni.ad,
+      aciklama: k.aciklama || '',
+    });
+  }
+
+  return workbook;
+}
+
+export async function exportMesaiOzetRaporu(
+  yil: number,
+  ay: number
+): Promise<ExcelJS.Workbook> {
+  const donem = odemeDonemiHesapla(yil, ay);
+  const ozetler = await mesaiOzetHesapla(yil, ay);
+
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet(`Mesai Ozet - ${donem.etiket}`);
+
+  sheet.columns = [
+    { header: 'Sicil No', key: 'sicilNo', width: 12 },
+    { header: 'Ad Soyad', key: 'adSoyad', width: 25 },
+    { header: 'Birim', key: 'birim', width: 25 },
+    { header: 'Fazla Mesai (Saat)', key: 'fazlaMesai', width: 18 },
+    { header: 'Pazar (Saat)', key: 'pazar', width: 14 },
+    { header: 'Bayram (Saat)', key: 'bayram', width: 14 },
+    { header: 'Servis (Saat)', key: 'servis', width: 14 },
+    { header: 'FM + Servis', key: 'fmServis', width: 16 },
+    { header: 'Genel Toplam', key: 'genelToplam', width: 14 },
+  ];
+
+  sheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  sheet.getRow(1).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FF4472C4' },
+  };
+
+  for (const o of ozetler) {
+    sheet.addRow({
+      sicilNo: o.sicilNo,
+      adSoyad: o.adSoyad,
+      birim: o.birim,
+      fazlaMesai: o.fazlaMesaiSaati,
+      pazar: o.pazarSaati,
+      bayram: o.bayramCalismasi,
+      servis: o.servisSaati,
+      fmServis: o.toplamFazlaMesaiVeServisSaati,
+      genelToplam: o.genelToplam,
     });
   }
 

@@ -32,6 +32,7 @@ model Personel {
   createdAt             DateTime     @default(now()) @map("created_at")
   updatedAt             DateTime     @updatedAt @map("updated_at")
   izinKayitlari         IzinKaydi[]
+  mesaiKayitlari        MesaiKaydi[]
 
   @@map("personeller")
 }
@@ -61,6 +62,30 @@ model IzinKaydi {
   createdAt        DateTime  @default(now()) @map("created_at")
 
   @@map("izin_kayitlari")
+}
+
+model MesaiNedeni {
+  id             Int          @id @default(autoincrement())
+  ad             String       @unique
+  aktif          Boolean      @default(true)
+  mesaiKayitlari MesaiKaydi[]
+
+  @@map("mesai_nedenleri")
+}
+
+model MesaiKaydi {
+  id            Int         @id @default(autoincrement())
+  personelId    Int         @map("personel_id")
+  personel      Personel    @relation(fields: [personelId], references: [id])
+  mesaiNedeniId Int         @map("mesai_nedeni_id")
+  mesaiNedeni   MesaiNedeni @relation(fields: [mesaiNedeniId], references: [id])
+  tarih         DateTime
+  saat          Decimal     @default(0)
+  aciklama      String?
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  @@map("mesai_kayitlari")
 }
 
 model ResmiTatil {

@@ -86,6 +86,14 @@ async function main() {
     }),
   ]);
 
+  // Mesai Nedenleri
+  await Promise.all([
+    prisma.mesaiNedeni.create({ data: { ad: 'Fazla Mesai' } }),
+    prisma.mesaiNedeni.create({ data: { ad: 'Pazar Çalışması' } }),
+    prisma.mesaiNedeni.create({ data: { ad: 'Bayram Çalışması' } }),
+    prisma.mesaiNedeni.create({ data: { ad: 'Servis' } }),
+  ]);
+
   console.log('Seed data oluşturuldu!');
 }
 

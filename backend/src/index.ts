@@ -7,6 +7,7 @@ import izinTuruRoutes from './routes/izinTuru';
 import birimRoutes from './routes/birim';
 import resmiTatilRoutes from './routes/resmiTatil';
 import raporRoutes from './routes/rapor';
+import mesaiRoutes from './routes/mesai';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/api/izin-turu', izinTuruRoutes);
 app.use('/api/birim', birimRoutes);
 app.use('/api/resmi-tatil', resmiTatilRoutes);
 app.use('/api/rapor', raporRoutes);
+app.use('/api/mesai', mesaiRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

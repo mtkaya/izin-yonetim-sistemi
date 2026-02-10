@@ -83,3 +83,48 @@ export interface PivotRapor {
   aylar: string[];
   pivot: Record<string, Record<string, number>>;
 }
+
+// ========== MESAİ TİPLERİ ==========
+
+export interface MesaiNedeni {
+  id: number;
+  ad: string;
+  aktif: boolean;
+}
+
+export interface MesaiKaydi {
+  id: number;
+  personelId: number;
+  personel?: Personel;
+  mesaiNedeniId: number;
+  mesaiNedeni?: MesaiNedeni;
+  tarih: string;
+  saat: number;
+  aciklama?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OdemeDonemi {
+  baslangic: string;
+  bitis: string;
+  etiket: string;
+}
+
+export interface MesaiOzet {
+  personelId: number;
+  sicilNo: string;
+  adSoyad: string;
+  birim: string;
+  fazlaMesaiSaati: number;
+  pazarSaati: number;
+  bayramCalismasi: number;
+  servisSaati: number;
+  toplamFazlaMesaiVeServisSaati: number;
+  genelToplam: number;
+}
+
+export interface MesaiOzetResponse {
+  donem: OdemeDonemi;
+  ozetler: MesaiOzet[];
+}
