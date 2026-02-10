@@ -1,5 +1,5 @@
 import client from '../api/client';
-import { Personel } from '../types';
+import type { Personel } from '../types';
 
 export const personelService = {
   getAll: () => client.get<Personel[]>('/personel').then((r) => r.data),

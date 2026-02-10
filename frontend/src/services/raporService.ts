@@ -1,5 +1,5 @@
 import client from '../api/client';
-import { YillikIzinOzet, TakvimVerisi, PivotRapor } from '../types';
+import type { YillikIzinOzet, TakvimVerisi, PivotRapor } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 

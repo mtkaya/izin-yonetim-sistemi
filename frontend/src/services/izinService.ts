@@ -1,5 +1,5 @@
 import client from '../api/client';
-import { IzinKaydi, IzinTuru, KalanIzin } from '../types';
+import type { IzinKaydi, IzinTuru, KalanIzin } from '../types';
 
 export const izinService = {
   getAll: (params?: { personelId?: number; yil?: number }) =>
